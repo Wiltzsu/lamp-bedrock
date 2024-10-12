@@ -24,6 +24,7 @@ DB_HOST="localhost"
 WP_HOME="http://$PROJECT_NAME.local"
 WP_SITEURL="http://$PROJECT_NAME.local/wp"
 APACHE_CONF="/etc/apache2/sites-available/$PROJECT_NAME.conf"
+ETC_HOSTS="/etc/hosts"
 
 # Check if the project directory already exists
 if [ -d "$PROJECT_DIR" ]; 
@@ -67,4 +68,13 @@ echo "Enablind the new site and required Apache modules..."
 sudo a2ensite "$PROJECT_NAME".conf
 sudo a2enmod rewrite
 
+# Add the project to /etc/hosts if it doesn't exist
+echo "Adding $PROJECT_NAME.local to /etc/hosts..."
+if ! grep -q "$PROJECT_NAME.local" /etc/hosts; then
+    sudo bash -c "echo '127.0.0.1 $PROJECT_NAME.local' >> /etc/hosts"
+fi
+
+# Reload Apache for changes to take effect
 systemctl reload apache2
+
+echo -e "${GREEN}$PROJECT_NAME setup completed! You can access it at http://$PROJECT_NAME.local${RESET}"
