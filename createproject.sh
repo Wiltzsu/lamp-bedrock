@@ -41,6 +41,10 @@ sudo chown -R www-data:www-data "$PROJECT_DIR"
 sudo find "$PROJECT_DIR" -type d -exec chmod 755 {} \;
 sudo find "$PROJECT_DIR" -type f -exec chmod 755 {} \;
 
+# Create the database
+echo "Creating database $DB_NAME..."
+mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;"
+
 # Create a new Apache configuration for the project
 echo "Creating Apache configuration for Bedrock"
 sudo bash -c "cat > $APACHE_CONF <<EOL
